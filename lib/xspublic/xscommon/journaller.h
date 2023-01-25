@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -344,10 +344,10 @@ template <> std::ostream& operator << (std::ostream& os, JlHexLogger<char> const
 	}()
 #define JLPRECISE(msg)	JLPRECISE2(msg, 16)
 
-#define JLCASE2(s, a, b)		case a: s << b << "(" << static_cast<int>(a) << ")"; break;
-#define JLCASE(s, a)			case a: s << #a << "(" << static_cast<int>(a) << ")"; break;
-#define JLDEFAULTCASE(s)		default: s << "Unknown case: " << static_cast<int>(e); break;
-#define JLENUMEXPPROTO(E)		std::ostream& operator << (std::ostream& dbg, E const& e)
+#define JLCASE2(s, a, b)		case a: s << b << "(" << static_cast<unsigned long long>(a) << ")"; break;
+#define JLCASE(s, a)			case a: s << #a << "(" << static_cast<unsigned long long>(a) << ")"; break;
+#define JLDEFAULTCASE(s)		default: s << "Unknown case: " << static_cast<unsigned long long>(e); break;
+#define JLENUMEXPPROTO(E)		std::ostream& operator << (std::ostream& dbg, E e)
 #define JLENUMEXPHDR(E, ...)	/*! \brief Translate \a e into a text representation */ JLENUMEXPPROTO(E) { __VA_ARGS__ switch(e) {
 #define JLENUMCASE(a)			JLCASE(dbg, a)
 #define JLENUMCASE2(a, b)		JLCASE2(dbg, a, b)
@@ -362,8 +362,8 @@ template <> std::ostream& operator << (std::ostream& os, JlHexLogger<char> const
 
 /*! Use this macro to define enum bit field expansion to a text stream, items will show up as "full hex=EnumName1(hex) | EnumName2(hex)". supply the type as parameter \a E and all
 	enum values you want to expand as a sequence of JLENUMCASEBITS(item) (no commas) */
-#define JLENUMEXPANDERBITS(E, items)	/*! \brief Translate \a e into a text representation */ JLENUMEXPPROTO(E) { bool first = true; dbg << std::hex << std::uppercase << static_cast<int>(e) << "="; items if (first) dbg << "<None>"; dbg << std::dec << std::nouppercase; return dbg; }
-#define JLENUMCASEBITS(a)				if ((static_cast<int>(e) & static_cast<int>(a)) == static_cast<int>(a)) { if (first) first = false; else dbg << " | "; dbg << #a << "(" << static_cast<int>(a) << ")"; }
+#define JLENUMEXPANDERBITS(E, items)	/*! \brief Translate \a e into a text representation */ JLENUMEXPPROTO(E) { /*lint --e{438, 650, 587} */ bool first = true; dbg << std::hex << std::uppercase << static_cast<unsigned long long>(e) << "="; items if (first) dbg << "<None>"; dbg << std::dec << std::nouppercase; return dbg; }
+#define JLENUMCASEBITS(a)				if ((static_cast<unsigned long long>(e) & static_cast<unsigned long long>(a)) == static_cast<unsigned long long>(a)) { if (first) first = false; else dbg << " | "; dbg << #a << "(" << static_cast<unsigned long long>(a) << ")"; e = static_cast<decltype(e)>(static_cast<unsigned long long>(e) & ~static_cast<unsigned long long>(a)); }
 #define JLENUMCASEBITSNONE(a)			if (first) { dbg << #a << "(0)"; first = false; }
 
 #define JLQTDEBUGHANDLER	\

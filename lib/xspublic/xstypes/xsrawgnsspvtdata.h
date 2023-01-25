@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -66,6 +66,7 @@
 #define XSRAWGNSSPVTDATA_H
 
 #include "pstdint.h"
+#include "xstypedefs.h"
 
 #ifdef _MSC_VER
 	#pragma pack(push, 1)
@@ -201,7 +202,11 @@ struct XsRawGnssPvtData
 	}
 #endif
 
+#ifdef SWIG
 };
+#else
+} XS_PACKED_STRUCT;
+#endif
 typedef struct XsRawGnssPvtData XsRawGnssPvtData;
 
 #ifdef _MSC_VER

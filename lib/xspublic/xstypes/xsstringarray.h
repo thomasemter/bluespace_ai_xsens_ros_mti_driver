@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -185,7 +185,29 @@ struct XsStringArray : public XsArrayImpl<XsString, g_xsStringArrayDescriptor, X
 			}
 
 			if (found)
-				return (int)i;
+				return (ptrdiff_t)i;
+		}
+		return -1;
+	}
+
+	/*! \brief find the first item where startsWith(needle) returns true will be returned
+		\param needle String to be found
+		\param isCaseSensitive Optional, default is true
+		\return place of needle in the array or -1 if the string was not found
+	*/
+	ptrdiff_t findPrefix(XsString const& needle, bool isCaseSensitive = true) const
+	{
+		if (size() == 0)
+			return -1;
+
+		for (XsSize i = 0; i < size(); ++i) // loop over all elements of the lists
+		{
+			XsString const& a = at(i);
+			if (a.size() < needle.size())
+				continue;
+
+			if (a.startsWith(needle, isCaseSensitive))
+				return (ptrdiff_t)i;
 		}
 		return -1;
 	}

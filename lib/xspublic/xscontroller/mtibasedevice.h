@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -114,8 +114,6 @@ public:
 	bool setErrorMode(XsErrorMode errorMode) override;
 	uint16_t rs485TransmissionDelay() const;
 	bool setRs485TransmissionDelay(uint16_t delay);
-
-	bool messageLooksSane(const XsMessage& msg) const override;
 
 	bool startRepresentativeMotion() override;
 	bool representativeMotionState() override;

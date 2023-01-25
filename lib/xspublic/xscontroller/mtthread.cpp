@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -80,6 +80,8 @@ MtThread::MtThread(DataParser& fetcher, SerialCommunicator& communicator)
 	, m_communicator(&communicator)
 	, m_gotoConfigPlus(0)
 {
+	JLDEBUGG("Starting MtThread " << this << " with parser " << &fetcher);
+
 	XsMessage gotoConfig(XMID_GotoConfig);
 	XsMessage largeGotoConfig(XMID_GotoConfig, 30);
 	m_gotoConfigPlus = new XsByteArray(largeGotoConfig.rawMessage());
@@ -92,6 +94,7 @@ MtThread::~MtThread(void)
 {
 	try
 	{
+		JLDEBUGG("Stopping MtThread " << this);
 		cleanup();
 		if (m_gotoConfigPlus)
 			delete m_gotoConfigPlus;

@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -529,12 +529,6 @@ uint8_t MtiBaseDevice::syncLine(const XsSyncSetting& setting) const
 			assert(setting.m_function == XSF_SampleAndSend);
 		return static_cast<uint8_t>(gmtLine);
 	}
-}
-
-bool MtiBaseDevice::messageLooksSane(const XsMessage& msg) const
-{
-	(void)msg;
-	return true;
 }
 
 /*! \returns True if device uses on board filtering */

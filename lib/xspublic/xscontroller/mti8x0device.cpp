@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -121,6 +121,7 @@ MtiBaseDevice::BaseFrequencyResult Mti8X0Device::getBaseFrequencyInternal(XsData
 
 	auto baseFreq = [this](XsDataIdentifier dataType)
 	{
+		XsDataIdentifier fullType = (dataType & XDI_FullTypeMask);
 		switch (dataType & XDI_TypeMask)
 		{
 			case XDI_None:
@@ -141,7 +142,9 @@ MtiBaseDevice::BaseFrequencyResult Mti8X0Device::getBaseFrequencyInternal(XsData
 				return 100;
 
 			case XDI_GnssGroup:
-				return deviceId().isGnss() ? 4 : 0;
+				if (fullType == XDI_GnssPvtPulse)
+					return deviceId().isRtk() ? XDI_MAX_FREQUENCY_VAL : 0;
+				return deviceId().isGnss() ? XDI_MAX_FREQUENCY_VAL : 0;
 			case XDI_PressureGroup:
 				return 100;
 			case XDI_PositionGroup:

@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -107,6 +107,7 @@ public:
 		\returns The value type
 	*/
 	virtual value_type add(IProtocolHandler* handler);
+	virtual value_type find(XsProtocolType type);
 	virtual bool remove(XsProtocolType type);
 	virtual bool hasProtocol(XsProtocolType type) const;
 	virtual void clear();

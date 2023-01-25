@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -501,11 +501,11 @@ std::vector<XsDeviceId> XsControl::mtDeviceIds() const
 
 /*! \brief Place all sensors connected through a serial port into Configuration Mode.
 
-    This function is called before close() in the destructor of the class.
-    /sa close()
+	This function is called before close() in the destructor of the class.
+	/sa close()
 
-    \internal
-    The function places the sensors in configuration mode in the appropriate order as they are sorted by sortBySync.
+	\internal
+	The function places the sensors in configuration mode in the appropriate order as they are sorted by sortBySync.
 */
 void XsControl::gotoConfig(void)
 {
@@ -598,13 +598,13 @@ XsDevice* XsControl::addMasterDevice(Communicator* communicator)
 /*! \endcond */
 
 /*!	\brief Open the log file with the given \a filename.
-    \returns True is the file was opened successfully. False if an error was encountered.
+	\returns True is the file was opened successfully. False if an error was encountered.
 
 	\param filename the name of the file to open
 
 	\returns true on success, false on failure
 
-    \sa lastResult(), loadLogFile(), logFileName()
+	\sa lastResult(), loadLogFile(), logFileName()
 */
 bool XsControl::openLogFile(const XsString& filename)
 {
@@ -693,7 +693,7 @@ bool XsControl::openPort(const XsString& portname, XsBaudRate baudrate, uint32_t
 /*! \cond XS_INTERNAL */
 /*! \brief Finalize opening the port
 
-    Takes ownership of the passed Communicator.
+	Takes ownership of the passed Communicator.
 */
 bool XsControl::finalizeOpenPort(Communicator* communicator, XsPortInfo& portinfo, uint32_t timeout, bool detectRs485)
 {

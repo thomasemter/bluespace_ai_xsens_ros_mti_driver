@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -1253,7 +1253,7 @@ public:
 	\details The class provides a main suspendable mutex, which can be used for all kinds of status updates and a
 	deeper guarded mutex, which will enforce the main mux to be locked before allowing itself to be locked.
 
-	\note The main purpose of this is for multi-threaded data handling in which the mian mux guards the state of the device,
+	\note The main purpose of this is for multi-threaded data handling in which the main mux guards the state of the device,
 	and the guarded mux guards data access.
 */
 class GuardedMutex : private MutexReadWriteSuspendable

@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -78,7 +78,7 @@ XsSyncSettingArray supportedSyncSettings(XsDeviceId const& deviceId);
 
 XsSyncSettingArray supportedSyncSettingsForMtx2Device();
 XsSyncSettingArray supportedSyncSettingsForMtiDevice();
-XsSyncSettingArray supportedSyncSettingsForMti7Device();
+XsSyncSettingArray supportedSyncSettingsForMti7AndMTi8Devices();
 XsSyncSettingArray supportedSyncSettingsForMtigDevice();
 XsSyncSettingArray supportedSyncSettingsForMark5MtigX10Device();
 XsSyncSettingArray supportedSyncSettingsForMtDevice();

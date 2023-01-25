@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -78,7 +78,7 @@ static const DeviceFactory::DeviceTypeId MTI_X					= 20;
 static const DeviceFactory::DeviceTypeId MTI_X0					= 21;
 static const DeviceFactory::DeviceTypeId MTI_X00				= 22;
 static const DeviceFactory::DeviceTypeId MTIG					= 23;
-static const DeviceFactory::DeviceTypeId MTI_7					= 24;
+static const DeviceFactory::DeviceTypeId MTI_7_MTI_8			= 24;
 static const DeviceFactory::DeviceTypeId MTI_6X0				= 25;
 static const DeviceFactory::DeviceTypeId MTI_8X0				= 26;
 static const DeviceFactory::DeviceTypeId MTI_3X0				= 27;

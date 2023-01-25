@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -165,23 +165,23 @@
 #endif	// ifndef XDA_DLL_API
 
 /*
-    Configuration | Runtime | DebInfo | Defines
-    --------------+---------------------------------------
-    Debug         | MDd     | Yes     | XSENS_DEBUG;_DEBUG
-    RelWithDeb    | MD      | Yes     | XSENS_DEBUG;XSENS_RELEASE;_DEBUG
-    Release       | MD      | No      | XSENS_RELEASE;NDEBUG
+	Configuration | Runtime | DebInfo | Defines
+	--------------+---------------------------------------
+	Debug         | MDd     | Yes     | XSENS_DEBUG;_DEBUG
+	RelWithDeb    | MD      | Yes     | XSENS_DEBUG;XSENS_RELEASE;_DEBUG
+	Release       | MD      | No      | XSENS_RELEASE;NDEBUG
 
-    The common way to setup configuration-dependent defines:
-    #if defined(XSENS_DEBUG)
+	The common way to setup configuration-dependent defines:
+	#if defined(XSENS_DEBUG)
 	//// Debug or RelWithDeb build
 	#if defined(XSENS_RELEASE)
 		//// RelWithDeb build
 	#else
 		//// Debug build
 	#endif
-    #else
+	#else
 	//// Release build
-    #endif
+	#endif
 */
 
 //////////////////////////////////////////////////

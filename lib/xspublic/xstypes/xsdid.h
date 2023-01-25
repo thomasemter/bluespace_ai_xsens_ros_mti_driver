@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -110,6 +110,7 @@
 #define XS_DID_GPL_2					0x02000000
 #define XS_DID_GPL_3					0x03000000
 #define XS_DID_GPL_7					0x07000000
+#define XS_DID_GPL_8					0x08000000
 #define XS_DID_GPL_10					0x01000000
 #define XS_DID_GPL_20					0x02000000
 #define XS_DID_GPL_30					0x03000000
@@ -130,6 +131,7 @@
 #define XS_DID_GPL_AHRSGNSSG			XS_DID_GPL_500
 #define XS_DID_GPL_GNSSINS				XS_DID_GPL_600
 #define XS_DID_GPL_GNSSINSG				XS_DID_GPL_700
+#define XS_DID_GPL_GNSSINSRTK			XS_DID_GPL_800
 
 #define XS_DID_TYPE_AWINDA				XS_DID_TYPEH_AWINDAMASTER
 #define XS_DID_TYPE_AWINDA_STATION		(XS_DID_TYPEH_AWINDAMASTER | XS_DID_TYPEL_STATION)
@@ -150,6 +152,7 @@
 #define XS_DID_MK4TYPE_MT_2_MPU			(XS_DID_TYPEH_MT_X_MPU | XS_DID_GPL_2)
 #define XS_DID_MK4TYPE_MT_3_MPU			(XS_DID_TYPEH_MT_X_MPU | XS_DID_GPL_3)
 #define XS_DID_MK4TYPE_MT_7_MPU			(XS_DID_TYPEH_MT_X_MPU | XS_DID_GPL_7)
+#define XS_DID_MK4TYPE_MT_8_MPU			(XS_DID_TYPEH_MT_X_MPU | XS_DID_GPL_8)
 #define XS_DID_MK4TYPE_MT_310			(XS_DID_TYPEH_MT_3X0 | XS_DID_GPL_1)
 #define XS_DID_MK4TYPE_MT_320			(XS_DID_TYPEH_MT_3X0 | XS_DID_GPL_2)
 #define XS_DID_MK4TYPE_MT_330			(XS_DID_TYPEH_MT_3X0 | XS_DID_GPL_3)

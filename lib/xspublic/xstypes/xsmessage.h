@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -92,7 +92,7 @@ XSTYPES_DLL_API void XsMessage_copyConstruct(XsMessage* thisPtr, XsMessage const
 XSTYPES_DLL_API void XsMessage_assign(XsMessage* thisPtr, XsSize dataSize);
 XSTYPES_DLL_API void XsMessage_load(XsMessage* thisPtr, XsSize msgSize, unsigned char const* src);
 XSTYPES_DLL_API void XsMessage_destruct(XsMessage* thisPtr);
-XSTYPES_DLL_API void XsMessage_copy(XsMessage* copy, XsMessage const* src);
+XSTYPES_DLL_API void XsMessage_copy(XsMessage* copy, XsMessage const* thisPtr);
 XSTYPES_DLL_API void XsMessage_swap(XsMessage* a, XsMessage* b);
 XSTYPES_DLL_API XsSize XsMessage_dataSize(XsMessage const* thisPtr);
 XSTYPES_DLL_API const uint8_t* XsMessage_constData(XsMessage const* thisPtr, XsSize offset);

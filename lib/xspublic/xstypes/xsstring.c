@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -632,7 +632,7 @@ void XsString_replaceAll(XsString* thisPtr, XsString const* src, XsString const*
 */
 void XsString_trimmed(XsString* thisPtr, XsString const* source)
 {
-	if (!source || XsString_empty(source))
+	if (XsString_empty(source))
 		XsString_destruct(thisPtr);
 	else
 	{
@@ -656,4 +656,28 @@ void XsString_trimmed(XsString* thisPtr, XsString const* source)
 		else
 			XsString_destruct(thisPtr);
 	}
+}
+
+/*! \brief Make the string all lower-case
+*/
+void XsString_toLower(XsString* thisPtr)
+{
+	XsSize i;
+	if (XsString_empty(thisPtr))
+		return;
+
+	for (i = 0; i < thisPtr->m_size-1; ++i)
+		thisPtr->m_data[i] = (char) tolower(thisPtr->m_data[i]);
+}
+
+/*! \brief Make the string all upper-case
+*/
+void XsString_toUpper(XsString* thisPtr)
+{
+	XsSize i;
+	if (XsString_empty(thisPtr))
+		return;
+
+	for (i = 0; i < thisPtr->m_size - 1; ++i)
+		thisPtr->m_data[i] = (char)toupper(thisPtr->m_data[i]);
 }

@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -72,6 +72,7 @@
 	#include <stddef.h>
 	typedef double XsReal;	//!< Defines the floating point type used by the Xsens libraries
 	typedef size_t XsSize;	//!< XsSize must be unsigned number!
+	typedef ptrdiff_t XsSizeSigned;	//!< signed variant of XsSize
 	#define XSREAL_ALLOWS_MEMCPY	1
 	#ifndef PRINTF_SIZET_MODIFIER
 		#if defined(XSENS_64BIT)
@@ -91,6 +92,7 @@
 #else
 	typedef float XsReal;			//!< Defines the floating point type used by the Xsens libraries
 	typedef unsigned int XsSize;	//!< XsSize must be unsigned number!
+	typedef int XsSizeSigned;		//!< signed variant of XsSize
 	#define XSREAL_ALLOWS_MEMCPY	1
 	#define PRINTF_SIZET_MODIFIER ""
 #endif // XSENS_SINGLE_PRECISION
@@ -107,7 +109,8 @@ enum XsDataFlags
 	XSDF_None		= 0,	//!< No flag set
 	XSDF_Managed	= 1,	//!< The contained data should be managed (freed) by the object, when false, the object assumes the memory is freed by some other process after its destruction
 	XSDF_FixedSize	= 2,	//!< The contained data points to a fixed-size buffer, this allows creation of dynamic objects on the stack without malloc/free overhead.
-	XSDF_Empty		= 4		//!< The object contains undefined data / should be considered empty. Usually only relevant when XSDF_FixedSize is also set, as otherwise the data pointer will be NULL and empty-ness is implicit.
+	XSDF_Empty		= 4,	//!< The object contains undefined data / should be considered empty. Usually only relevant when XSDF_FixedSize is also set, as otherwise the data pointer will be NULL and empty-ness is implicit.
+	XSDF_BadAlloc	= 8,	//!< The last memory allocation in the object failed, the contents are now erased
 };
 /*! @} */
 typedef enum XsDataFlags XsDataFlags;
@@ -120,6 +123,13 @@ XSTYPES_DLL_API const char* XsDataFlags_toString(XsDataFlags f);
 
 #ifdef __cplusplus
 } // extern "C"
+
+/*! \brief boolean xor function, since C++ does not provide this and operator ^ is not guaranteed to work */
+inline bool xorBool(bool a, bool b)
+{
+	return (a && !b) || (b && !a);
+}
+
 /*! \brief \copybrief XsDataFlags_toString \sa XsDataFlags_toString */
 inline const char* toString(XsDataFlags s)
 {
@@ -203,7 +213,7 @@ inline const char* toString(XsDataFlags s)
 #ifdef __GNUC__
 	#define XS_PACKED_STRUCT __attribute__((__packed__))
 #else
-	#define XS_PACKED_STRUCT
+	#define XS_PACKED_STRUCT	/* */
 #endif
 
 #if defined (__ICCARM__)

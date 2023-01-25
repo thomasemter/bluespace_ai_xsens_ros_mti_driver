@@ -62,108 +62,26 @@
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
 //  
 
-#ifndef DEVICECOMMUNICATOR_H
-#define DEVICECOMMUNICATOR_H
+#ifndef XSUBLOXGNSSPLATFORM_H
+#define XSUBLOXGNSSPLATFORM_H
 
-#include "communicator.h"
-#include "messageextractor.h"
-
-#ifdef LOG_COMMUNICATOR_RX_TX
-	#include <xstypes/xsfile.h>
-#endif
-
-
-class DeviceCommunicator : public Communicator
+/*! \brief Used to select u-blox GNSS chip platform
+	\sa XsDevice::setUbloxGnssPlatform
+	\details These enum values represent different platform setting for the u-blox GNSS chip
+*/
+enum XsUbloxGnssPlatform
 {
-public:
-
-	//! \brief A typedef for Rx chanel ID
-	typedef XsSize RxChannelId;
-
-	DeviceCommunicator(RxChannelId rxChannels = 1);
-
-	// live stuff
-	XsResultValue getDeviceId() override;
-	XsResultValue gotoConfig(bool) override;
-	XsResultValue gotoMeasurement() override;
-
-	//! \returns The timeout value for gotoConfig function
-	uint32_t gotoConfigTimeout() const
-	{
-		return m_gotoConfigTimeout;
-	}
-	void setGotoConfigTimeout(uint32_t timeout) override;
-	bool writeMessage(const XsMessage& message) override;
-
-	void handleMessage(const XsMessage& message) override;
-
-	using Communicator::doTransaction;
-	virtual bool doTransaction(const XsMessage& msg, XsMessage& rcv, uint32_t timeout) override;
-
-	void setKeepAlive(bool enable) override;
-
-	// file stuff
-	void closeLogFile() override;
-	XsMessage readMessage(uint8_t msgId = 0) override;
-	XsMessage readMessageFromStartOfFile(uint8_t msgId, int maxMsgs = 0) override;
-	std::deque<XsMessage> readMessagesFromStartOfFile(uint8_t msgId, int maxMsgs = 0) override;
-	void loadLogFile(XsDevice* device) override;
-	void abortLoadLogFile() override;
-	bool openLogFile(const XsString& filename) override;
-	XsString logFileName() const override;
-	XsFilePos logFileSize() const override;
-	XsTimeStamp logFileDate() const override;
-	XsFilePos logFileReadPosition() const override;
-	void resetLogFileReadPosition(void) override;
-	bool isReadingFromFile() const override;
-	void waitForLastTaskCompletion() override;
-
-	/*! \brief Read a log file into cache
-		\param device The device to read log from
-		\returns XRV_OK if successful
-	*/
-	virtual XsResultValue readLogFile(XsDevice* device);
-
-	/*! \brief Read a single XsDataPacket from an open log file
-		\returns XRV_OK if successful
-	*/
-	virtual XsResultValue readSinglePacketFromFile();
-
-protected:
-	~DeviceCommunicator() override;
-	XsResultValue extractMessages(const XsByteArray& rawIn, std::deque<XsMessage>& messages, RxChannelId channel = 0);
-
-	/*! \brief Writes a raw data to a device
-		\param data The raw data to write
-		\return XRV_OK if successful
-	*/
-	virtual XsResultValue writeRawData(const XsByteArray& data) = 0;
-	RxChannelId addRxChannel();
-	XsSize messageExtractorCount() const;
-	MessageExtractor& messageExtractor(RxChannelId = 0);
-
-#ifdef LOG_COMMUNICATOR_RX_TX
-	void logTxStream(XsMessage const& msg);
-	void logRxStream(XsMessage const& msg);
-#endif
-
-private:
-	static const uint32_t m_defaultGotoConfigTimeout = 200;	// 1500 just after powerup, 100ms is not enough sometimes during tests
-
-	uint32_t m_gotoConfigTimeout;
-
-	RxChannelId m_nextRxChannelId;
-	std::vector<MessageExtractor> m_messageExtractors;
-
-#ifdef LOG_COMMUNICATOR_RX_TX
-	XsFile m_rxLog;
-	XsFile m_txLog;
-#ifdef LOG_COMMUNICATOR_RX_TX_TIMESTAMPED
-	XsTimeStamp m_logStart;
-#endif
-
-	void generateLogFiles();
-#endif
+	XGP_Portable				= 0,
+	XGP_Stationary				= 2,
+	XGP_Pedestrian				= 3,
+	XGP_Automotive				= 4,
+	XGP_AtSea					= 5,
+	XGP_Airborne1g				= 6,
+	XGP_Airborne2g				= 7,
+	XGP_Airborne4g				= 8,	//!< Airborne with <4g Acceleration
+	XGP_Wrist					= 9
 };
+
+typedef enum XsUbloxGnssPlatform XsUbloxGnssPlatform;
 
 #endif

@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -356,15 +356,17 @@ public:
 	inline bool operator ==(const XsQuaternion& other) const
 	{
 		return	m_w == other.m_w &&
-			m_x == other.m_x &&
-			m_y == other.m_y &&
-			m_z == other.m_z;
+				m_x == other.m_x &&
+				m_y == other.m_y &&
+				m_z == other.m_z;
 	}
 
-	//! \brief Returns true if the fields of this and \a other are within \a tolerance of each otehr
+	/*! \brief Returns true if the fields of this and \a other are within \a tolerance of each other
+		\note This considers positive- and negative-definite quaternions to be identical!
+	*/
 	inline bool isEqual(const XsQuaternion& other, XsReal tolerance) const
 	{
-		return !!XsQuaternion_compare(this, &other, tolerance);
+		return !XsQuaternion_compare(this, &other, tolerance);
 	}
 
 	//! \brief Returns the dot product of this with \a other

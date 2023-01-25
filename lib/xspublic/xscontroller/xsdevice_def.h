@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -155,7 +155,7 @@ struct XsFilterProfile;
 //AUTO enum XsOperationalMode;
 //AUTO enum XsAccessControlMode;
 //AUTO struct XsDeviceParameter;
-//AUTO enum XsGnssPlatform;
+//AUTO enum XsUbloxGnssPlatform;
 //AUTO struct XsIccRepMotionResult;
 //AUTO }
 
@@ -406,8 +406,12 @@ public:
 	virtual XsResultValue setDeviceParameter(XsDeviceParameter const& parameter);
 	virtual XsResultValue deviceParameter(XsDeviceParameter& parameter) const;
 
-	virtual XsGnssPlatform gnssPlatform() const;
-	virtual bool setGnssPlatform(XsGnssPlatform gnssPlatform);
+	XSNOEXPORT XSDEPRECATED XsGnssPlatform gnssPlatform() const;
+	XSNOEXPORT XSDEPRECATED virtual bool setGnssPlatform(XsGnssPlatform gnssPlatform);
+	virtual XsUbloxGnssPlatform ubloxGnssPlatform() const;
+	virtual bool setUbloxGnssPlatform(XsUbloxGnssPlatform ubloxGnssPlatform);
+	virtual XsIntArray gnssReceiverSettings() const;
+	virtual bool setGnssReceiverSettings(const XsIntArray& gnssReceiverSettings);
 
 	// MTw
 	virtual bool acceptConnection();

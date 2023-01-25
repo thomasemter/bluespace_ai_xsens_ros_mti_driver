@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -62,141 +62,55 @@
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
 //  
 
-#include "mti7device.h"
-#include <xstypes/xsstatusflag.h>
+#ifndef XSMTI7MTI8DEVICE_H
+#define XSMTI7MTI8DEVICE_H
 
-Mti7Device::Mti7Device(Communicator* comm)
-	: MtiBaseDeviceEx(comm)
-{
-	if (comm)
-		comm->setDefaultTimeout(2000); //Increase the default timeout for MTi-1 devices because a settings write can occasionally take ~900ms
-}
-
-Mti7Device::Mti7Device(XsDevice* masterdevice)
-	: MtiBaseDeviceEx(masterdevice)
-{
-}
-
-Mti7Device::~Mti7Device()
-{
-}
-
-namespace
-{
-//! \brief Returns the default frequency of the supplied \a dataType
-int baseFreq(XsDataIdentifier dataType)
-{
-	switch (dataType & XDI_TypeMask)
-	{
-		case XDI_None:
-			return 100;
-		case XDI_TimestampGroup:
-			return XDI_MAX_FREQUENCY_VAL;
-		case XDI_StatusGroup:
-			return 100;
-		case XDI_TemperatureGroup:
-			return 100;
-		case XDI_PositionGroup:
-			return 100;
-		case XDI_VelocityGroup:
-			return 100;
-		case XDI_OrientationGroup:
-			return 100;
-		case XDI_AccelerationGroup:
-			return 100;
-		case XDI_AngularVelocityGroup:
-			return 100;
-		case XDI_MagneticGroup:
-			return 100;
-		case XDI_PressureGroup:
-			return 50;
-		case XDI_GnssGroup:
-		{
-			if ((dataType & XDI_FullTypeMask) == XDI_GnssPvtData)
-				return 4;
-			return 0;
-		}
-		default:
-			return 0;
-	}
-}
-}
-
-/*! \brief Returns the base update rate (hz) corresponding to the dataType
+#include "mtibasedevice.h"
+struct XsVector;
+/*! \brief A class used for the MTi-7-and MTi-8 types
 */
-MtiBaseDevice::BaseFrequencyResult Mti7Device::getBaseFrequencyInternal(XsDataIdentifier dataType) const
+class MTi7_MTi8Device : public MtiBaseDeviceEx
 {
-	BaseFrequencyResult result;
-	result.m_frequency = 0;
-	result.m_divedable = true;
-
-	if ((dataType & XDI_FullTypeMask) == XDI_LocationId || (dataType & XDI_FullTypeMask) == XDI_DeviceId)
-		return result;
-
-	if ((dataType & XDI_FullTypeMask) == XDI_AccelerationHR || (dataType & XDI_FullTypeMask) == XDI_RateOfTurnHR)
+public:
+	//! \copybrief MtiXDevice::constructStandalone
+	static XsDevice* constructStandalone(Communicator* comm)
 	{
-		bool isMtMk4_1_v1 = hardwareVersion().major() == 1;
-		bool isMtMk4_1_v2 = hardwareVersion().major() == 2;
-		result.m_frequency = isMtMk4_1_v2 ? 800 : 1000;
-		result.m_divedable = isMtMk4_1_v1 ? false : true;
-
-		return result;
+		return new MTi7_MTi8Device(comm);
 	}
 
-	result.m_frequency = baseFreq(dataType);
+	//! \brief An empty constructor for a device
+	explicit MTi7_MTi8Device(Communicator* comm);
 
-	if (((dataType & XDI_TypeMask) == XDI_TimestampGroup) || ((dataType & XDI_TypeMask) == XDI_GnssGroup))
-		result.m_divedable = false;
+	//! \brief An empty constructor for a master device
+	explicit MTi7_MTi8Device(XsDevice* master);
+	virtual ~MTi7_MTi8Device();
 
-	return result;
-}
+	bool hasIccSupport() const override;
+	uint32_t supportedStatusFlags() const override;
+	XsString shortProductCode() const override;
 
-bool Mti7Device::hasIccSupport() const
-{
-	return true;
-}
+	bool setGnssLeverArm(const XsVector& arm) override;
+	XsVector gnssLeverArm() const override;
 
-uint32_t Mti7Device::supportedStatusFlags() const
-{
-	return (uint32_t)(
-			//|XSF_SelfTestOk
-			XSF_OrientationValid
-			| XSF_GpsValid
-			| XSF_NoRotationMask
-			| XSF_RepresentativeMotion
-			| XSF_ExternalClockSynced
-			| XSF_ClipAccX
-			| XSF_ClipAccY
-			| XSF_ClipAccZ
-			| XSF_ClipGyrX
-			| XSF_ClipGyrY
-			| XSF_ClipGyrZ
-			| XSF_ClipMagX
-			| XSF_ClipMagY
-			| XSF_ClipMagZ
-			//|XSF_Retransmitted
-			| XSF_ClippingDetected
-			//|XSF_Interpolated
-			//|XSF_SyncIn
-			//|XSF_SyncOut
-			| XSF_FilterMode
-			| XSF_HaveGnssTimePulse
-		);
-}
+protected:
+	BaseFrequencyResult getBaseFrequencyInternal(XsDataIdentifier dataType = XDI_None) const override;
+	bool setStringOutputMode(uint16_t type, uint16_t period, uint16_t skipFactor) override;
+};
 
-bool Mti7Device::setStringOutputMode(uint16_t /*type*/, uint16_t /*period*/, uint16_t /*skipFactor*/)
-{
-	return true;
-}
-
-/*! \copybrief XsDevice::shortProductCode
+#ifndef XDA_PRIVATE_BUILD
+/*! \class Mti7_MTi8DeviceEx
+	\brief The internal base class for MTi-7 and MTi-8 devices
 */
-XsString Mti7Device::shortProductCode() const
+struct Mti7_MTi8DeviceEx : public MTi7_MTi8Device
 {
-	XsString code = productCode();
+	//! \copybrief MtigDevice::MtigDevice
+	explicit Mti7_MTi8DeviceEx(Communicator* comm) : MTi7_MTi8Device(comm) {};
 
-	if (hardwareVersion() >= XsVersion(2, 0, 0))
-		code = stripProductCode(code);
+	//! \copybrief MtigDevice::MtigDevice
+	explicit Mti7_MTi8DeviceEx(XsDevice* master) : MTi7_MTi8Device(master) {};
+};
+#else
+#include "mti7_mti8deviceex.h"
+#endif
 
-	return code;
-}
+#endif

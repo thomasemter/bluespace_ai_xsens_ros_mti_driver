@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -73,7 +73,11 @@
 	// support for exceptions is disabled, just do whatever assert(0) does
 	#ifdef XSENS_DEBUG
 		#include <assert.h>
-		#define XM_THROW(a)			XSENS_FW_ASSERT_FUNC(a, __FILE__, (unsigned) __LINE__)
+		#ifdef XSENS_FW_ASSERT_FUNC
+			#define XM_THROW(a)		XSENS_FW_ASSERT_FUNC(a, __FILE__, (unsigned) __LINE__)
+		#else
+			#define XM_THROW(a)		assert(a)
+		#endif
 		#define XM_THROW_DEFINED	1
 	#else
 		#define XM_THROW(a)			((void) 0)

@@ -62,124 +62,92 @@
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
 //  
 
-#include "mtigdevice.h"
-#include <xstypes/xsstringoutputtypearray.h>
+#include "mti7_mti8device.h"
 #include <xstypes/xsstatusflag.h>
+#include <xstypes/xsvector.h>
 
-#define MTMK4_700_LEGACY_FW_VERSION_MAJOR		1
-#define MTMK4_700_LEGACY_FW_VERSION_MINOR		3
-#define MTMK4_700_LEGACY_FW_VERSION_REVISION	7
-
-using namespace xsens;
-
-/*! \brief Constructs a device
-	\param comm The communicator to construct with
-*/
-MtigDevice::MtigDevice(Communicator* comm)
+MTi7_MTi8Device::MTi7_MTi8Device(Communicator* comm)
 	: MtiBaseDeviceEx(comm)
 {
+	if (comm)
+		comm->setDefaultTimeout(2000); //Increase the default timeout for MTi-1 devices because a settings write can occasionally take ~900ms
 }
 
-/*! \brief An empty constructor
-	\param master The master device
-*/
-MtigDevice::MtigDevice(XsDevice* master)
-	: MtiBaseDeviceEx(master)
+MTi7_MTi8Device::MTi7_MTi8Device(XsDevice* masterdevice)
+	: MtiBaseDeviceEx(masterdevice)
 {
 }
 
-/*! \brief Destroys a device
-*/
-MtigDevice::~MtigDevice()
+MTi7_MTi8Device::~MTi7_MTi8Device()
 {
 }
 
-XsStringOutputTypeArray MtigDevice::supportedStringOutputTypes() const
+namespace
 {
-	XsStringOutputTypeArray outputs;
-	outputs.push_back(XSOT_HCHDM);
-	outputs.push_back(XSOT_HCHDG);
-	outputs.push_back(XSOT_TSS2);
-	outputs.push_back(XSOT_PHTRO);
-	outputs.push_back(XSOT_PRDID);
-	outputs.push_back(XSOT_EM1000);
-	outputs.push_back(XSOT_PSONCMS);
-	outputs.push_back(XSOT_HCMTW);
-	outputs.push_back(XSOT_HEHDT);
-	outputs.push_back(XSOT_HEROT);
-	outputs.push_back(XSOT_GPGGA);
-	outputs.push_back(XSOT_PTCF);
-	outputs.push_back(XSOT_XSVEL);
-	outputs.push_back(XSOT_GPZDA);
-	outputs.push_back(XSOT_GPRMC);
-
-	return outputs;
+//! \brief Returns the default frequency of the supplied \a dataType
+int baseFreq(MTi7_MTi8Device const* device, XsDataIdentifier dataType)
+{
+	switch (dataType & XDI_TypeMask)
+	{
+		case XDI_None:
+			return 100;
+		case XDI_TimestampGroup:
+			return XDI_MAX_FREQUENCY_VAL;
+		case XDI_StatusGroup:
+			return 100;
+		case XDI_TemperatureGroup:
+			return 100;
+		case XDI_PositionGroup:
+			return 100;
+		case XDI_VelocityGroup:
+			return 100;
+		case XDI_OrientationGroup:
+			return 100;
+		case XDI_AccelerationGroup:
+			return 100;
+		case XDI_AngularVelocityGroup:
+			return 100;
+		case XDI_MagneticGroup:
+			return 100;
+		case XDI_PressureGroup:
+			return 50;
+		case XDI_GnssGroup:
+		{
+			XsDataIdentifier fullType = (dataType & XDI_FullTypeMask);
+			if (fullType == XDI_GnssPvtPulse)
+				return device->deviceId().isRtk() ? XDI_MAX_FREQUENCY_VAL : 0;
+			if (fullType == XDI_GnssGroup || fullType == XDI_GnssPvtData)
+				return XDI_MAX_FREQUENCY_VAL;
+			return 0;
+		}
+		default:
+			return 0;
+	}
+}
 }
 
 /*! \brief Returns the base update rate (hz) corresponding to the dataType
 */
-MtiBaseDevice::BaseFrequencyResult MtigDevice::getBaseFrequencyInternal(XsDataIdentifier dataType) const
+MtiBaseDevice::BaseFrequencyResult MTi7_MTi8Device::getBaseFrequencyInternal(XsDataIdentifier dataType) const
 {
-	MtiBaseDevice::BaseFrequencyResult result;
+	BaseFrequencyResult result;
 	result.m_frequency = 0;
 	result.m_divedable = true;
 
+	if ((dataType & XDI_FullTypeMask) == XDI_LocationId || (dataType & XDI_FullTypeMask) == XDI_DeviceId)
+		return result;
+
 	if ((dataType & XDI_FullTypeMask) == XDI_AccelerationHR || (dataType & XDI_FullTypeMask) == XDI_RateOfTurnHR)
 	{
-		result.m_frequency = 1000;
-		result.m_divedable = false;
+		bool isMtMk4_1_v1 = hardwareVersion().major() == 1;
+		bool isMtMk4_1_v2 = hardwareVersion().major() == 2;
+		result.m_frequency = isMtMk4_1_v2 ? 800 : 1000;
+		result.m_divedable = isMtMk4_1_v1 ? false : true;
 
 		return result;
 	}
 
-	auto baseFreq = [this](XsDataIdentifier dataType)
-	{
-		static const XsVersion legacyFwVersion(MTMK4_700_LEGACY_FW_VERSION_MAJOR, MTMK4_700_LEGACY_FW_VERSION_MINOR, MTMK4_700_LEGACY_FW_VERSION_REVISION);
-		bool const isLegacyFirmware = (firmwareVersion() <= legacyFwVersion);
-
-		XsDataIdentifier fullType = (dataType & XDI_FullTypeMask);
-
-		switch (dataType & XDI_TypeMask)
-		{
-			case XDI_None:
-				return 2000;
-			case XDI_TimestampGroup:
-				return XDI_MAX_FREQUENCY_VAL;
-
-			case XDI_RawSensorGroup:
-				return 2000;
-			case XDI_AnalogInGroup:
-				return 2000;
-			case XDI_StatusGroup:
-				return 2000;
-
-			case XDI_TemperatureGroup:
-				return 400;
-			case XDI_PositionGroup:
-				return 400;
-			case XDI_VelocityGroup:
-				return 400;
-			case XDI_OrientationGroup:
-				return 400;
-			case XDI_AccelerationGroup:
-				return 400;
-			case XDI_AngularVelocityGroup:
-				return 400;
-			case XDI_MagneticGroup:
-				return 100;
-			case XDI_PressureGroup:
-				return 50;
-
-			case XDI_GnssGroup:
-				if (fullType == XDI_GnssPvtPulse)
-					return 0;  // RTK only
-				return isLegacyFirmware ? 0 : 4;
-			default:
-				return 0;
-		}
-	};
-
-	result.m_frequency = baseFreq(dataType);
+	result.m_frequency = baseFreq(this, dataType);
 
 	if (((dataType & XDI_TypeMask) == XDI_TimestampGroup) || ((dataType & XDI_TypeMask) == XDI_GnssGroup))
 		result.m_divedable = false;
@@ -187,7 +155,12 @@ MtiBaseDevice::BaseFrequencyResult MtigDevice::getBaseFrequencyInternal(XsDataId
 	return result;
 }
 
-uint32_t MtigDevice::supportedStatusFlags() const
+bool MTi7_MTi8Device::hasIccSupport() const
+{
+	return true;
+}
+
+uint32_t MTi7_MTi8Device::supportedStatusFlags() const
 {
 	return (uint32_t)(
 			//|XSF_SelfTestOk
@@ -208,9 +181,65 @@ uint32_t MtigDevice::supportedStatusFlags() const
 			//|XSF_Retransmitted
 			| XSF_ClippingDetected
 			//|XSF_Interpolated
-			| XSF_SyncIn
-			| XSF_SyncOut
+			//|XSF_SyncIn
+			//|XSF_SyncOut
 			| XSF_FilterMode
 			| XSF_HaveGnssTimePulse
+			| (deviceId().isRtk() ? XSF_RtkStatus : 0)
 		);
+}
+
+bool MTi7_MTi8Device::setStringOutputMode(uint16_t /*type*/, uint16_t /*period*/, uint16_t /*skipFactor*/)
+{
+	return true;
+}
+
+/*! \copybrief XsDevice::shortProductCode
+*/
+XsString MTi7_MTi8Device::shortProductCode() const
+{
+	XsString code = productCode();
+
+	if (hardwareVersion() >= XsVersion(2, 0, 0))
+		code = stripProductCode(code);
+
+	return code;
+}
+
+/*! \copydoc XsDevice::setGnssLeverArm
+*/
+bool MTi7_MTi8Device::setGnssLeverArm(const XsVector& arm)
+{
+	if (!deviceId().isRtk())
+		return false;
+
+	XsMessage snd(XMID_SetGnssLeverArm, 3 * sizeof(float));
+	snd.setBusId(busId());
+	snd.setDataFloat((float)arm[0], 0/* sizeof(float)*/);
+	snd.setDataFloat((float)arm[1], 1 * sizeof(float));
+	snd.setDataFloat((float)arm[2], 2 * sizeof(float));
+
+	XsMessage rcv;
+	if (!doTransaction(snd, rcv))
+		return false;
+
+	return true;
+}
+
+/*! \copydoc XsDevice::gnssLeverArm
+*/
+XsVector MTi7_MTi8Device::gnssLeverArm() const
+{
+	if (!deviceId().isRtk())
+		return XsVector();
+
+	XsMessage snd(XMID_ReqGnssLeverArm), rcv;
+	if (!doTransaction(snd, rcv))
+		return XsVector();
+
+	XsVector arm(3);
+	arm[0] = rcv.getDataFloat(0/* sizeof(float)*/);
+	arm[1] = rcv.getDataFloat(1 * sizeof(float));
+	arm[2] = rcv.getDataFloat(2 * sizeof(float));
+	return arm;
 }

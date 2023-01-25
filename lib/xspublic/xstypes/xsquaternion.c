@@ -1,5 +1,5 @@
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -31,7 +31,7 @@
 //  
 
 
-//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2022 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //  
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -303,7 +303,7 @@ int XsQuaternion_equal(XsQuaternion const* a, XsQuaternion const* b)
 	return (a->m_w == b->m_w &&
 			a->m_x == b->m_x &&
 			a->m_y == b->m_y &&
-			a->m_z == b->m_z);
+			a->m_z == b->m_z) ? 1 : 0;
 }
 
 /*! \brief Checks whether \a a and \a b are equal with tolerance \a tolerance
@@ -318,23 +318,23 @@ static int fuzzyIsEqual(double a, double b, double tolerance)
 }
 
 /*! \relates XsQuaternion
-	\brief Returns non-zero if the values at \a thisPtr and \a other are within \a tolerance of each other
+	\brief Returns zero if the values at \a thisPtr and \a other are within \a tolerance of each other
 */
 int XsQuaternion_compare(XsQuaternion const* thisPtr, XsQuaternion const* other, XsReal tolerance)
 {
 	if (thisPtr == other)
-		return 1;
+		return 0;
 
 	if (fuzzyIsEqual(thisPtr->m_data[0], other->m_data[0], tolerance) &&
 		fuzzyIsEqual(thisPtr->m_data[1], other->m_data[1], tolerance) &&
 		fuzzyIsEqual(thisPtr->m_data[2], other->m_data[2], tolerance) &&
 		fuzzyIsEqual(thisPtr->m_data[3], other->m_data[3], tolerance))
-		return 1;
+		return 0;
 	// add extra check for q == -q (negative-definite vs positive-definite comparison)
 	return (fuzzyIsEqual(thisPtr->m_data[0], -other->m_data[0], tolerance) &&
 			fuzzyIsEqual(thisPtr->m_data[1], -other->m_data[1], tolerance) &&
 			fuzzyIsEqual(thisPtr->m_data[2], -other->m_data[2], tolerance) &&
-			fuzzyIsEqual(thisPtr->m_data[3], -other->m_data[3], tolerance));
+			fuzzyIsEqual(thisPtr->m_data[3], -other->m_data[3], tolerance)) ? 0 : 1;
 }
 
 /*! \relates XsQuaternion
@@ -343,9 +343,9 @@ int XsQuaternion_compare(XsQuaternion const* thisPtr, XsQuaternion const* other,
 XsReal XsQuaternion_dotProduct(XsQuaternion const* thisPtr, XsQuaternion const* other)
 {
 	return	(thisPtr->m_w * other->m_w) +
-		(thisPtr->m_x * other->m_x) +
-		(thisPtr->m_y * other->m_y) +
-		(thisPtr->m_z * other->m_z);
+			(thisPtr->m_x * other->m_x) +
+			(thisPtr->m_y * other->m_y) +
+			(thisPtr->m_z * other->m_z);
 }
 
 /*! @} */
